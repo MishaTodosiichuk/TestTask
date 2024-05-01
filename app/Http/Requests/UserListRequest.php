@@ -23,7 +23,7 @@ class UserListRequest extends FormRequest
     {
         return [
             'name' => 'required|max:50',
-            'phones.*' => 'required|max:20|min:10|unique:user_lists, phone_num',
+            'phones.*' => 'required|max:20|min:10',
         ];
     }
 
@@ -35,7 +35,6 @@ class UserListRequest extends FormRequest
             'phones.*.required' => "Це поле обовʼязкове для заповнення",
             'phones.*.max' => "Це поле може містити до 20 символів",
             'phones.*.min' => "Це поле може містити принаймні 10 символів",
-            'phones.*.unique' => "Це поле повинне бути унікальним",
         ];
     }
 }

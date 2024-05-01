@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserListRequest;
+use App\Models\Phone;
 use App\Models\UserList;
 use Illuminate\Http\Request;
+
 
 class UserListController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = UserList::orderBy('id', 'desc')->paginate(5);
+        $users = UserList::query()->orderByDesc('id')->paginate(5);
+
         return view('user.index', compact('users'));
     }
 
@@ -32,11 +35,11 @@ class UserListController extends BaseController
     {
         $data = $request->validated();
 
-        $user = UserList::create($data);
+        $user = UserList::query()->create($data);
 
         $this->service->store($data, $user);
 
-        return redirect()->back()->with('status','Нового користувача додано!');
+        return back()->with('status', 'Запис додано');
     }
 
     /**
@@ -64,7 +67,9 @@ class UserListController extends BaseController
 
         $this->service->update($data, $userList);
 
-        return redirect()->back()->with('status', 'Інформацію про користувача оновлено!');
+        $users = UserList::query()->orderBy('id', 'desc')->paginate(5);
+
+        return view('user.index', compact('users'));
 
     }
 
@@ -73,7 +78,9 @@ class UserListController extends BaseController
      */
     public function destroy(UserList $userList)
     {
-        $userList->delete();
-        return redirect()->back()->with('status', 'Корисутвача видалено');
+        $data = UserList::query()->find($userList->id);
+        $userList->phones()->delete();
+        $data->delete();
+        return back()->with('status', 'Запис видалено');
     }
 }

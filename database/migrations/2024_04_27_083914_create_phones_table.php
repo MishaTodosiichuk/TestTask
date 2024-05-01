@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_list_id')->constrained()->onDelete('cascade');
-            $table->integer('phone_num')->unique();
+            $table->integer('phone_num');
             $table->timestamps();
         });
     }
